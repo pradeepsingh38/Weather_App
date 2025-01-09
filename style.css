@@ -1,0 +1,197 @@
+*{
+    /* margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:sans-serif ; */
+  }
+
+
+
+/* main container */
+.main-container{
+    /* position: relative;
+    height: 100%; 
+    padding: 15px; */
+
+  display: flex;
+  /* width: 100%; */
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* background image */
+.bgImages{
+    /* position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover; 
+    background-position: center;
+    z-index: -1; */
+    /* background-image: url('https://i.ibb.co/qNv7NxZ/pc.webp'); */
+
+}
+#bgImg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 130%;
+    background-size: cover; 
+    background-position: center;
+    z-index: -1;
+}
+
+/* card container */
+.container{
+    /* margin-top: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: auto;
+    height: 600px;
+    background-color: white; */
+
+    margin-top: 20px;
+    display: flex;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+
+}
+
+/*-----left section Start------------ */
+.left-sec{
+    /* margin-top: 20px; */
+
+    width: 30%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgba(245, 245, 245, 0.706);
+
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+
+}
+.search-field{
+    margin-top: 20px;
+    display: flex;
+    justify-content: left;
+    border: none;
+}
+.searchs{
+    border: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 5px;
+}
+.search-btn{
+    background-color: skyblue;
+    width: 20px;
+    border: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.curr-icons img{
+    margin-top: 20px;
+    width: 150px;
+    height: 150px;
+}
+
+.curr-temp{
+    display: flex;
+    margin-top: 50px;
+}
+.curr-dayTime{
+    margin-top: -10px;
+}
+
+.curr-dayInfo{
+    margin-top: 0px;
+}
+
+
+
+/*-----left section End------------ */
+
+
+
+
+/*-----rigt section start------------ */
+.right-sec{
+    /* background-color: white; */
+    background-color: rgba(245, 245, 245, 0.877);
+
+    width: 100%;
+    padding: 20px 40px;
+
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/* right section header */
+.rightHeader{
+    display: flex;
+    justify-content: space-between;
+}
+
+.selectBtn button{
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    background-color:white ;
+}
+
+.degreeBtn button{
+    border: none;
+    border-radius: 50%;
+    font-size: 15px;
+    cursor: pointer;
+    background-color:white ;
+}
+
+/* day week details */
+.dayDetails{
+    display: flex;
+}
+.detail{
+    
+  width: 90px;
+  height: 100px;
+  padding: 8px;
+  margin: 10px;
+  margin-top:20px;
+  text-align: center;
+  border-radius: 15px;
+  background-color: white;
+}
+.detail img{
+    margin-top: -18px;
+    padding: 5px;
+}
+.temp{
+    font-size: small;
+}
+
+/* HighlightDetail */
+.HighlightDetail{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns of equal width */
+}
+.Highlight{
+    width: 240px;
+    height: 170px;
+    padding: 30px;
+    margin: 10px;
+    margin-top: 20px;
+    /* text-align: center; */
+    border-radius: 15px;
+    background-color: white;
+}
+
+/*-----right section End------------ */
+
