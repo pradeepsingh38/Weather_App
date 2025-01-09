@@ -1,5 +1,10 @@
 const currentTemp = document.querySelector(".curTemp");
 const currentCondition = document.querySelector(".currCondition");
+const searchInput = document.querySelector(".searchs");
+const searchBtn = document.querySelector(".search-btn");
+const currLoc = document.querySelector(".currLoc");
+
+
 
 
 
@@ -9,6 +14,13 @@ fetch("https://geolocation-db.com/json/").then((responseLoc) => {
     return responseLoc.json();
 }).then((locdata)=>{
     console.log(locdata);
+
+    cityName=locdata.city;
+    fetchTodayWeather(cityName)
+
+
+    // const locCountry = locdata.country_name;
+    // const currLocation = document.querySelector(".currLoc");
 }).catch((err)=>{
     console.error("Error fetching weather data:", err)
 })
@@ -29,6 +41,10 @@ function fetchTodayWeather(city) {
             console.log(data);
 
             const today = data.currentConditions;
+
+            //city
+            currLoc.innerText = data.resolvedAddress;
+
 
             //for fetch the bg image 
             setWeatherBackground(today.icon);
@@ -63,7 +79,16 @@ function fetchTodayWeather(city) {
 
 
 //Call the function for a specific city
-fetchTodayWeather("bengaluru");
+searchBtn.addEventListener("click", ()=>{
+    let city = searchInput.value.trim();
+    if(city){
+        fetchTodayWeather(city)
+    }else{
+        alert("please enter valid city name !")
+    }
+})
+
+//fetchTodayWeather("bengaluru");
 
 //for backround image 
 function setWeatherBackground(icon) {
