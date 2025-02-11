@@ -1,19 +1,62 @@
-const currentTemp = document.querySelector(".curTemp");
+// const currentTemp = document.querySelector(".curTemp");
+const tempUnit = document.querySelectorAll(".temp-unit");
 const currentCondition = document.querySelector(".currCondition");
 const searchField = document.querySelector(".search-field");
 const searchInput = document.querySelector(".searchs");
 const searchBtn = document.querySelector(".search-btn");
+//const timer = document.querySelector('.curr-dayTime');
+const date = document.getElementById("date-time");
+
+
 const currLoc = document.querySelector(".currLoc");
+const currIcon = document.querySelector(".curricon");
+
 const percPer = document.querySelector(".perc");
 
 const todayBtn = document.querySelector(".todayBtn");
 const weekBtn = document.querySelector(".weekBtn");
+const celBtn = document.querySelector(".cel");
+const farBtn = document.querySelector(".far");
+
+
+
 const detailsCard = document.querySelector(".detailsCard");
 
 
-let currentCity = ""
+let currentCity = ""; // Default location
 let currUnit = "C";
-let hourOrWeek = "Week";
+let hourOrWeek = "week";
+
+function getDateTime(){
+    let now = new Date(),
+    hour = now.getHours(),
+    minute = now.getMinutes();
+
+    let days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    ];
+    hour = hour % 12;
+    if (hour < 10) {
+        hour = "0" + hour;
+    }
+    if (minute < 10) {
+        minute = "0" + minute;
+    }
+    let dayString = days[now.getDay()];
+    return `${dayString}, ${hour}:${minute}`;
+}
+
+date.innerText = getDateTime();
+
+setInterval(() => {
+    date.innerText = getDateTime();
+}, 1000);
 
 //-----fetch the geoloacation api------
 function getPublicIp() {
@@ -25,7 +68,7 @@ function getPublicIp() {
             console.log(locdata);
             currentCity=locdata.city;
         
-           // console.log(currentCity);
+           //console.log(currentCity);
             fetchTodayWeather(currentCity,currUnit,hourOrWeek)
         }).catch((err)=>{
             console.error("Error fetching weather data:", err)
@@ -50,7 +93,14 @@ function fetchTodayWeather(city,unit,hourOrWeek) {
         .then((data) => {
             console.log(data);
 
-            const today = data.currentConditions;
+
+        let today = data.currentConditions;
+        if (unit === "C") {
+            temp.innerText = today.temp;
+        } else {
+            temp.innerText = celciusToFahrenheit(today.temp);
+        }
+        //const today = data.currentConditions;
 
             //city
             currLoc.innerText = data.resolvedAddress;            
@@ -58,31 +108,29 @@ function fetchTodayWeather(city,unit,hourOrWeek) {
 
             //for fetch the bg image 
             setWeatherBackground(today.icon);
-            console.log(today.icon);
+            //console.log(today.icon);
 
             //current icon
-            setCurrentIcon(today.icon);
+            currIcon.src =  setCurrentIcon(today.icon);
 
             //for current today temp
-            console.log(today.temp);
-            currentTemp.textContent = `${today.temp}°C`;
+            //console.log(today.temp);
+
+           // currentTemp.textContent = `${today.temp}°C`;
 
             //for  current conditions
             if(hourOrWeek="hourly"){
                 updateWeatherData(data.days[0].hours,unit,"day")
             }
+            else{
+                updateWeatherData(data.days,unit,"Week")
+            }
 
 
 
             //console.log(today.conditions);
-            // currentCondition.textContent = `${today.conditions}`
-            // percPer.textContent = `${today.precip}%`
-
-            // //for today data
-            // todayBtn.addEventListener("click", ()=>{
-            //     updateTodayData(today, data.resolvedAddress);
-            // })
-            // console.log(data.resolvedAddress);
+            currentCondition.textContent = `${today.conditions}`
+            percPer.textContent = `${today.precip}%`
 
         })
         .catch((err) => {
@@ -121,42 +169,97 @@ function setWeatherBackground(icon) {
                 bgImg.src = "https://i.ibb.co/kqtZ1Gx/cn.jpg";
             }
         }
-        //for current weather icon
+    //for current weather icon
     function  setCurrentIcon(icons){
-        const currIcon = document.querySelector(".curricon");
-
         if (icons === "partly-cloudy-day") {
-            currIcon.src = "https://i.ibb.co/PZQXH8V/27.png";
+            return "https://i.ibb.co/PZQXH8V/27.png";
         } else if (icons === "partly-cloudy-night") {
-            currIcon.src = "https://i.ibb.co/Kzkk59k/15.png";
+            return "https://i.ibb.co/Kzkk59k/15.png";
         } else if (icons === "rain") {
-            currIcon.src = "https://i.ibb.co/kBd2NTS/39.png";
+            return "https://i.ibb.co/kBd2NTS/39.png";
         } else if (icons === "clear-day") {
-            currIcon.src = "https://i.ibb.co/rb4rrJL/26.png";
+            return "https://i.ibb.co/rb4rrJL/26.png";
         } else if (icons === "clear-night") {
-            currIcon.src = "https://i.ibb.co/1nxNGHL/10.png";
+            return "https://i.ibb.co/1nxNGHL/10.png";
         }
     }
 
-    //for day and time
-    const timer = document.querySelector('.curr-dayTime');
-    const currDate = new Date();
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const currentDay = daysOfWeek[currDate.getDay()];
-    const currentTime = new Date();
-    let hours = currentTime.getHours();
-    let minutes = currentTime.getMinutes();
+// for temp cel far button
+farBtn.addEventListener("click", () => {
+    changeUnit("F");
+});
+celBtn.addEventListener("click", () => {
+    changeUnit("C");
+});
+
+
+function changeUnit(unit){
+    if(currUnit != unit){
+        currUnit = unit;
+        {
+            tempUnit.forEach((ele) => {
+                ele.innerText = `°${unit.toUpperCase()}`;
+            });
+            if(unit === "C"){
+                cel.classList.add("active");
+                farBtn.classList.remove("active");
+            }else{
+                cel.classList.remove("active");
+                farBtn.classList.add("active");
+            }
+            fetchTodayWeather(location, currUnit, hourlyOrWeek);
+        }
+    }
     
-    if (hours > 12) {
-        hours = hours - 12;
+}
+
+
+// for day week btn
+
+    todayBtn.addEventListener("click", () => {
+        changeTimeSpan("hourly");
+    });
+    weekBtn.addEventListener("click", (e) => {
+        changeTimeSpan("week");
+        console.log(e);
+        
+    });
+    
+    function changeTimeSpan(unit){
+        if(hourOrWeek != unit){
+            hourOrWeek = unit;
+            if (unit === "hourly") {
+                todayBtn.classList.add("active");
+                weekBtn.classList.remove("active");
+            }else {
+                todayBtn.classList.remove("active");
+                weekBtn.classList.add("active");
+            }
+            fetchTodayWeather(location,currUnit,hourOrWeek)
+
+        }
     }
-    if (hours === 0){
-        hours = 12;
-    }
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    }
-    timer.textContent = `${currentDay}, ${hours}:${minutes}`;
+
+    
+
+    //for day and time
+    // const currDate = new Date();
+    // const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    // const currentDay = daysOfWeek[currDate.getDay()];
+    // const currentTime = new Date();
+    // let hours = currentTime.getHours();
+    // let minutes = currentTime.getMinutes();
+    
+    // if (hours > 12) {
+    //     hours = hours - 12;
+    // }
+    // if (hours === 0){
+    //     hours = 12;
+    // }
+    // if (minutes < 10) {
+    //     minutes = "0" + minutes;
+    // }
+    // timer.textContent = `${currentDay}, ${hours}:${minutes}`;
 
 
 
@@ -184,8 +287,12 @@ function setWeatherBackground(icon) {
             return `${hour}:${min} AM`;
         }
     }
-    
 
+
+    // change cel to far
+    function celciusToFahrenheit(temp) {
+        return ((temp * 9) / 5 + 32).toFixed(1);
+    }
 
 
 // for hourly data
@@ -224,27 +331,5 @@ function setWeatherBackground(icon) {
         }
     }
 
-
-    todayBtn.addEventListener("click", () => {
-        changeTimeSpan("hourly");
-    });
-    weekBtn.addEventListener("click", () => {
-        changeTimeSpan("week");
-    });
-    
-    function changeTimeSpan(unit){
-        if(hourOrWeek != unit){
-            hourOrWeek = unit;
-            if (unit === "hourly") {
-                todayBtn.classList.add("active");
-                weekBtn.classList.remove("active");
-            }else {
-                todayBtn.classList.remove("active");
-                weekBtn.classList.add("active");
-            }
-            fetchTodayWeather(location,currUnit,hourOrWeek)
-
-        }
-    }
 
     

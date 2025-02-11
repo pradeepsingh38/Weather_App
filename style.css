@@ -20,18 +20,6 @@
 }
 
 /* background image */
-.bgImages{
-    /* position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover; 
-    background-position: center;
-    z-index: -1; */
-    /* background-image: url('https://i.ibb.co/qNv7NxZ/pc.webp'); */
-
-}
 #bgImg{
     position: absolute;
     top: 0;
@@ -106,7 +94,7 @@
     display: flex;
     margin-top: 50px;
 }
-.curr-dayTime{
+.date-time{
     margin-top: -10px;
 }
 
@@ -141,25 +129,44 @@
 
 .selectBtn button{
     border: none;
-    font-size: 15px;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 600;
+    color: #495057;
     cursor: pointer;
-    background-color:white ;
+    text-transform: capitalize;
+}
+.selectBtn button.active{
+    color: var(--primary-color);
 }
 
 .degreeBtn button{
-    border: none;
+    /* border: none;
     border-radius: 50%;
     font-size: 15px;
     cursor: pointer;
-    background-color:white ;
+    background-color:white ; */
+
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #1a1a1a;
+    background-color: #fff;
+}
+
+.degreeBtn button.active{
+    color: #fff;
+    background-color: #1a1a1a;
 }
 
 /* day week details */
 .detailsCard{
     /* display: flex; */
 
-    display: flex;
-    flex-wrap: wrap;
+    /* display: flex;
+    flex-wrap: wrap; */
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
     gap: 20px;
     margin-top: 50px;
 }
@@ -199,10 +206,12 @@
     align-items: center;
     justify-content: center;
 }
-/* .detail img{
-    margin-top: -18px;
+.detail img{
+    height: 75px;
+    margin-top: 0px;
     padding: 5px;
-} */
+    width: 75px;
+}
 /* .temp{
     font-size: small;
 } */
