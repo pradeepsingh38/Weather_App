@@ -1,24 +1,19 @@
-// const currentTemp = document.querySelector(".curTemp");
-const tempUnit = document.querySelectorAll(".temp-unit");
-const currentCondition = document.querySelector(".currCondition");
 const searchField = document.querySelector(".search-field");
 const searchInput = document.querySelector(".searchs");
 const searchBtn = document.querySelector(".search-btn");
-//const timer = document.querySelector('.curr-dayTime');
+const temp = document.querySelector("#temp");
+const tempUnit = document.querySelector("#temp-unit");
+const currentCondition = document.querySelector(".currCondition");
+
 const date = document.getElementById("date-time");
-
-
 const currLoc = document.querySelector(".currLoc");
 const currIcon = document.querySelector(".curricon");
-
 const percPer = document.querySelector(".perc");
 
 const todayBtn = document.querySelector(".todayBtn");
 const weekBtn = document.querySelector(".weekBtn");
-const celBtn = document.querySelector(".cel");
-const farBtn = document.querySelector(".far");
-
-
+const celBtn = document.getElementById("cel");
+const farBtn = document.getElementById("far");
 
 const detailsCard = document.querySelector(".detailsCard");
 
@@ -79,17 +74,12 @@ getPublicIp();
 //----- feth the weather Data-----
 
 function fetchTodayWeather(city,unit,hourOrWeek) {
-    //const apiKey = "EJ6UBL2JEQGYB3AA4ENASN62J";
-    const apiKey = "Y24SBNU67CLF6CY2YYHDAFUKW";
-    const apiUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=${apiKey}&contentType=json`;
+    // const apiKey = "Y24SBNU67CLF6CY2YYHDAFUKW";   
+    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`, {
+        method: "GET",
+    })
+    .then((response) => response.json())
 
-    fetch(apiUrl)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
         .then((data) => {
             console.log(data);
 
@@ -113,23 +103,19 @@ function fetchTodayWeather(city,unit,hourOrWeek) {
             //current icon
             currIcon.src =  setCurrentIcon(today.icon);
 
-            //for current today temp
-            //console.log(today.temp);
-
-           // currentTemp.textContent = `${today.temp}°C`;
 
             //for  current conditions
             if(hourOrWeek="hourly"){
                 updateWeatherData(data.days[0].hours,unit,"day")
             }
             else{
-                updateWeatherData(data.days,unit,"Week")
-            }
-
+                updateWeatherData(data.days,unit,"week")
+            } 
 
 
             //console.log(today.conditions);
             currentCondition.textContent = `${today.conditions}`
+            //console.log(today.precip);
             percPer.textContent = `${today.precip}%`
 
         })
@@ -144,9 +130,11 @@ function fetchTodayWeather(city,unit,hourOrWeek) {
 searchField.addEventListener("submit", (e)=>{
     e.preventDefault();
     let location = searchInput.value.trim();
-    //console.log(location);    
-        if(location !== ""){
-        fetchTodayWeather(location,currUnit,hourOrWeek);
+    //console.log(location); 
+
+    if(location !== ""){
+        currentCity = location;
+        fetchTodayWeather(currentCity,currUnit,hourOrWeek);
     }
 });
 
@@ -184,44 +172,14 @@ function setWeatherBackground(icon) {
         }
     }
 
-// for temp cel far button
-farBtn.addEventListener("click", () => {
-    changeUnit("F");
-});
-celBtn.addEventListener("click", () => {
-    changeUnit("C");
-});
-
-
-function changeUnit(unit){
-    if(currUnit != unit){
-        currUnit = unit;
-        {
-            tempUnit.forEach((ele) => {
-                ele.innerText = `°${unit.toUpperCase()}`;
-            });
-            if(unit === "C"){
-                cel.classList.add("active");
-                farBtn.classList.remove("active");
-            }else{
-                cel.classList.remove("active");
-                farBtn.classList.add("active");
-            }
-            fetchTodayWeather(location, currUnit, hourlyOrWeek);
-        }
-    }
-    
-}
-
 
 // for day week btn
 
     todayBtn.addEventListener("click", () => {
         changeTimeSpan("hourly");
     });
-    weekBtn.addEventListener("click", (e) => {
+    weekBtn.addEventListener("click", () => {
         changeTimeSpan("week");
-        console.log(e);
         
     });
     
@@ -235,32 +193,10 @@ function changeUnit(unit){
                 todayBtn.classList.remove("active");
                 weekBtn.classList.add("active");
             }
-            fetchTodayWeather(location,currUnit,hourOrWeek)
+            fetchTodayWeather(currentCity,currUnit,hourOrWeek)
 
         }
     }
-
-    
-
-    //for day and time
-    // const currDate = new Date();
-    // const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    // const currentDay = daysOfWeek[currDate.getDay()];
-    // const currentTime = new Date();
-    // let hours = currentTime.getHours();
-    // let minutes = currentTime.getMinutes();
-    
-    // if (hours > 12) {
-    //     hours = hours - 12;
-    // }
-    // if (hours === 0){
-    //     hours = 12;
-    // }
-    // if (minutes < 10) {
-    //     minutes = "0" + minutes;
-    // }
-    // timer.textContent = `${currentDay}, ${hours}:${minutes}`;
-
 
 
 
@@ -330,6 +266,38 @@ function changeUnit(unit){
             day++;
         }
     }
+
+
+    
+// for temp cel far button
+farBtn.addEventListener("click", () => {
+    changeUnit("F");
+});
+celBtn.addEventListener("click", () => {
+    changeUnit("C");
+});
+
+
+function changeUnit(unit){
+    if(currUnit != unit){
+        currUnit = unit;
+        {
+            tempUnit.forEach((ele) => {
+                ele.innerText = `°${unit.toUpperCase()}`;
+            });
+            if(unit === "C"){
+                cel.classList.add("active");
+                farBtn.classList.remove("active");
+            }else{
+                cel.classList.remove("active");
+                farBtn.classList.add("active");
+            }
+            fetchTodayWeather(currentCity, currUnit, hourOrWeek);
+        }
+    }
+    
+}
+
 
 
     
